@@ -1,25 +1,68 @@
-import logo from './logo.svg';
-import './App.css';
+import "./app.css";
+import {Buffer} from 'buffer';
+import axios from "axios";
 
-function App() {
+const App = () => {
+  const url = "https://cors-anywhere.herokuapp.com/http://45.77.39.206:8081/api/v4/mqtt/publish";
+  const username = 'admin';
+  const password = 'public';
+  const Opdata = {
+    topic: "home/living",
+    payload: { id: "E8:DB:84:AD:B2:34", command: "on" },
+    qos: 0,
+    retain: false,
+    clientid: "869523050100420",
+  };
+  const Cldata = {
+    topic: "home/living",
+    payload: { id: "E8:DB:84:AD:B2:34", command: "off" },
+    qos: 0,
+    retain: false,
+    clientid: "869523050100420",
+  };
+
+  const doorOpen = () => {
+    axios
+      .post(url, Opdata, {
+        auth: {
+          username: username,
+          password: password,
+        },
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const closeDoor = () => {
+    axios
+      .post(url, Cldata, {
+        auth: {
+          username: username,
+          password: password,
+        },
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button className="on" onClick={doorOpen}>
+        ON
+      </button>
+      <button className="off" onClick={closeDoor}>
+        OFF
+      </button>
     </div>
   );
-}
+};
 
 export default App;
